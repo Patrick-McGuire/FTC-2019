@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -29,7 +30,7 @@ public class Elevator {
         elevatorMotor = hardwareMap.get(DcMotor.class, "E");
         elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        elevatorPID = new PID(0,0,0);
+        elevatorPID = new PID(0, 0, 0);
         runtime = new ElapsedTime();
     }
 
@@ -48,7 +49,7 @@ public class Elevator {
 
         if (state == idle) {
             setPower(0);
-        } else if (state == zeroing){
+        } else if (state == zeroing) {
             setPower(zeroSpeed);
             if (getVelocity() < velocitySetpoint) {
                 elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -73,12 +74,16 @@ public class Elevator {
         return state;
     }
 
+    public int getPos() {
+        return elevatorMotor.getCurrentPosition();
+    }
+
     public double getVelocity() {
         int pos = elevatorMotor.getCurrentPosition();
         double time = runtime.milliseconds();
         double velocity = Math.abs((pos - lastPos) / (time - lastTime));
         lastTime = time;
         lastPos = pos;
-        return  velocity;
+        return velocity;
     }
 }

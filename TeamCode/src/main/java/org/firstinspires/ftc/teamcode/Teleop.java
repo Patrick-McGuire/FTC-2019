@@ -118,6 +118,9 @@ public final class Teleop extends OpMode {
             elevator.runElevator(elevatorGoal - elevatorPlacingOffset, gamepad2.right_stick_x);
         }
 
+        int intakeState = intake.getState();
+        int elevatorState = elevator.getState();
+        int elevatorPos = elevator.getPos();
         telemetry.addData("Heading", imu.getYaw());
     }
 }
