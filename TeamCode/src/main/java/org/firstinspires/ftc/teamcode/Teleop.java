@@ -49,7 +49,7 @@ public final class Teleop extends OpMode {
         imu = new IMU(hardwareMap);
 
         driveTrain = new BasicMechanum(imu, hardwareMap);
-        intake = new Intake(hardwareMap);
+        //intake = new Intake(hardwareMap);
         elevator = new Elevator(hardwareMap);
 
         runtime.reset();
@@ -83,44 +83,6 @@ public final class Teleop extends OpMode {
             elevator.setState(zeroing);
         }
 
-        // Driver control inputs
-        if (gamepad1.right_bumper) {
-            state = intaking;
-        } else if (gamepad1.left_bumper) {
-            state = idle;
-        } else if (gamepad1.a) {
-            state = handingOff;
-        } else if (gamepad1.right_trigger > .05) {
-            if (gamepad1.right_trigger > .5) {
-                // Relese game peice
-                state = idle;
-            } else {
-                state = placing;
-            }
-        } else if (state == placing) {
-            state = holdingStone;
-        }
 
-        // State cases
-        if (state == idle) {
-            intake.runIntake(true, false);
-            elevator.runElevator(elevatorGoal, gamepad2.right_stick_x);
-        } else if (state == intaking) {
-            intake.runIntake(false,true);
-            elevator.runElevator(0, gamepad2.right_stick_x);
-        } else if (state == handingOff) {
-            intake.runIntake(false,false);
-        } else if (state == holdingStone) {
-            intake.runIntake(true,false);
-            elevator.runElevator(elevatorGoal, gamepad2.right_stick_x);
-        } else if (state == placing) {
-            intake.runIntake(true,false);
-            elevator.runElevator(elevatorGoal - elevatorPlacingOffset, gamepad2.right_stick_x);
-        }
-
-        int intakeState = intake.getState();
-        int elevatorState = elevator.getState();
-        int elevatorPos = elevator.getPos();
-        telemetry.addData("Heading", imu.getYaw());
     }
 }
