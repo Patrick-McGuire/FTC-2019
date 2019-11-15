@@ -31,7 +31,7 @@ public class Elevator {
     private int goal = 0 - zeroPos;
     private int blockHeight = -650;
     private int bumpHeight = 300;
-    private int maxHeight = -2950;
+    private int maxHeight = -3100;
 
     double velo = 0;
     boolean zeroed = false;
@@ -56,7 +56,7 @@ public class Elevator {
         velo = calculateVelocity();
 
         if (Math.abs(manualPower) > .05) {
-            setPower(manualPower, true);
+            setPower(manualPower, false);
             goal = elevatorMotor.getCurrentPosition();
             return;
         }

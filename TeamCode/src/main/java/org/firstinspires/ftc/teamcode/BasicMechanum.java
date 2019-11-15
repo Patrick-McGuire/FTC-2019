@@ -36,4 +36,18 @@ public class BasicMechanum {
         double yawPower = headingPID.runPID(headingGoal, headingState);
         openLoopMechanum(x, y, yawPower);
     }
+
+    // Getter and setter
+    public double getFrontLeftPower() {
+        return frontLeftDrive.getPower();
+    }
+    public double getFrontRightPower() {
+        return frontRightDrive.getPower();
+    }
+    public double getBackLeftPower() {
+        return backLeftDrive.getPower();
+    }
+    public double getBackRightPower() {
+        return backRightDrive.getPower();
+    }
 }
