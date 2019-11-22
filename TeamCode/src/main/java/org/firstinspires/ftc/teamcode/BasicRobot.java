@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
+//import com.qualcomm.robotcore.hardware.CRServo;
+//import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "BasicRobot", group = "Opmode")
@@ -64,12 +64,12 @@ public final class BasicRobot extends OpMode {
             headingGoal = imu.getYaw();
         }
         if(gamepad1.right_stick_x > .05 || gamepad1.right_stick_x < -.05) {
-            driveTrain.openLoopMechanum(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            driveTrain.openLoopMechanum(-gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
             runtime.reset();
         } else {
-            driveTrain.closedLoopMechanum(gamepad1.left_stick_x, gamepad1.left_stick_y, headingGoal);
+            driveTrain.closedLoopMechanum(-gamepad1.left_stick_x, gamepad1.left_stick_y, headingGoal);
         }
-
+        //driveTrain.openLoopMechanum(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         endEffector.runExtension(gamepad2.left_stick_x);
 
         // Evevator code
@@ -118,14 +118,18 @@ public final class BasicRobot extends OpMode {
         endEffector.runClamps();
         elevator.runElevator(gamepad2.right_stick_y);
 
+        telemetry.addData("FL", driveTrain.getFrontLeftPower());
+        telemetry.addData("FR", driveTrain.getFrontRightPower());
+        telemetry.addData("BL", driveTrain.getBackLeftPower());
+        telemetry.addData("BR", driveTrain.getBackRightPower());
         // Telemetry to the driver station
-        telemetry.addData("Robot","State (%.2f), Heading (%.2f)",
-                (double) state, imu.getYaw());
-        telemetry.addData("Elevator", "Velocity (%.2f), Ele Pos (%.2f), Ele state (%.2f), Ele goal (%.2f)",
-                elevator.velo, elevator.getPos(), elevator.getState(), elevator.getGoal());
-        telemetry.addData("Clamp","State (%.2f), Clamp Power (%.2f), State time (%.2f)",
-                (double) endEffector.getClampState(), endEffector.getClampPower(), endEffector.getClampStateTime());
-        telemetry.addData("Drive Train","Front Left (%.2f), Front Right (%.2f), Back Left (%.2f), Back Right (%.2f)",
-                driveTrain.getFrontLeftPower(), driveTrain.getFrontRightPower(), driveTrain.getBackLeftPower(), driveTrain.getBackRightPower());
+//        telemetry.addData("Robot","State (%.2f), Heading (%.2f)",
+//                (double) state, imu.getYaw());
+//        telemetry.addData("Elevator", "Velocity (%.2f), Ele Pos (%.2f), Ele state (%.2f), Ele goal (%.2f)",
+//                elevator.velo, elevator.getPos(), elevator.getState(), elevator.getGoal());
+//        telemetry.addData("Clamp","State (%.2f), Clamp Power (%.2f), State time (%.2f)",
+//                (double) endEffector.getClampState(), endEffector.getClampPower(), endEffector.getClampStateTime());
+//        telemetry.addData("Drive Train","Front Left (%.2f), Front Right (%.2f), Back Left (%.2f), Back Right (%.2f)",
+//                driveTrain.getFrontLeftPower(), driveTrain.getFrontRightPower(), driveTrain.getBackLeftPower(), driveTrain.getBackRightPower());
     }
 }

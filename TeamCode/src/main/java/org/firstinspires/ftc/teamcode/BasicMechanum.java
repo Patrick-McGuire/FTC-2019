@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class BasicMechanum {
-    private DcMotor frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive;
+    DcMotor frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive;
     IMU imu;
     PID headingPID;
 
@@ -17,18 +17,30 @@ public class BasicMechanum {
         frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
+//        frontLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        frontLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+//        backLeftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        backLeftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        backRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         this.imu = imu;
 
-        headingPID = new PID(-0.04,0,-.05);
+        headingPID = new PID(-0.02,0,0);
     }
 
     public void openLoopMechanum(double x, double y, double yaw) {
         final double absPower = Math.hypot(x, y);
         final double driveAngle = Math.atan2(y, x) - Math.PI / 4;
-        frontLeftDrive.setPower(absPower * Math.cos(driveAngle) - yaw);
-        frontRightDrive.setPower(absPower * Math.sin(driveAngle) + yaw);
-        backLeftDrive.setPower(absPower * Math.sin(driveAngle) - yaw);
-        backRightDrive.setPower(absPower * Math.cos(driveAngle) + yaw);
+        frontLeftDrive.setPower(1.4144 * absPower * Math.cos(driveAngle) - yaw);
+        frontRightDrive.setPower(1.4144 * absPower * Math.sin(driveAngle) + yaw);
+        backLeftDrive.setPower(1.4144 * absPower * Math.sin(driveAngle) - yaw);
+        backRightDrive.setPower(1.4144 * absPower * Math.cos(driveAngle) + yaw);
     }
 
     public void closedLoopMechanum(double x, double y, double headingGoal) {
@@ -49,5 +61,15 @@ public class BasicMechanum {
     }
     public double getBackRightPower() {
         return backRightDrive.getPower();
+    }
+    public double getFrontLeftPos() {
+        return frontLeftDrive.getCurrentPosition();
+    }
+    public double getFrontRightPos() {return frontRightDrive.getCurrentPosition(); }
+    public double getBackLeftPos() {
+        return backLeftDrive.getCurrentPosition();
+    }
+    public double getBackRightPos() {
+        return backRightDrive.getCurrentPosition();
     }
 }
