@@ -11,7 +11,7 @@ public class BasicVision extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private IMU imu;
-    private BasicMechanum driveTrain;
+    private BasicMecanum driveTrain;
 
     // Vision instance. This does everything related to tracking
     private Vision vision;
@@ -27,9 +27,18 @@ public class BasicVision extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // Display on driver station
+        telemetry.addData("Initialization", "Starting");
+        telemetry.update();
+
+        // Init subsystems
         imu = new IMU(hardwareMap);
-        driveTrain = new BasicMechanum(imu, hardwareMap);
+        driveTrain = new BasicMecanum(imu, hardwareMap);
         vision = new Vision(hardwareMap);;
+
+        // Display on driver station
+        telemetry.addData("Initialization", "Complete");
+        telemetry.update();
 
         // Wait till play is pressed
         waitForStart();
@@ -57,7 +66,7 @@ public class BasicVision extends LinearOpMode {
             }
 
             // Run the drivetrain at the desired power values
-            driveTrain.closedLoopMechanum(xPower, yPower, headingGoal);
+            driveTrain.closedLoopMecanum(xPower, yPower, headingGoal);
 
             // Display data on the driver station
             telemetry.addData("x-pos", xPos);

@@ -9,23 +9,23 @@ public class AutoTelePass {
     public int getElevatorEncoder() {
         return elevatorEncoder;
     }
-    public void setElevatorEncoder(int ELEVATORENCODER) {
-        elevatorEncoder = ELEVATORENCODER;
+    public void setElevatorEncoder(int elevatorEncoder) {
+        this.elevatorEncoder = elevatorEncoder;
     }
 
     // Intake methods
     public int getIntakePos() {
         return intakePos;
     }
-    public void setIntakePos(int INTAKEPOS) {
-        intakePos = INTAKEPOS;
+    public void setIntakePos(int intakePos) {
+        this.intakePos = intakePos;
     }
 
     // Heading methods
     public int getHeading() {
-        return elevatorEncoder;
+        return heading;
     }
-    public void setHeading(int HEADING) {
-        elevatorEncoder = HEADING;
+    public void setHeading(int heading) {
+        this.heading = heading;
     }
 }

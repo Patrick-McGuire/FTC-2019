@@ -4,12 +4,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class BasicMechanum {
+public class BasicMecanum {
     DcMotor frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive;
     IMU imu;
     PID headingPID;
 
-    public BasicMechanum (IMU imu, HardwareMap hardwareMap) {
+    public BasicMecanum(IMU imu, HardwareMap hardwareMap) {
         frontLeftDrive = hardwareMap.get(DcMotor.class, "F_L");
         frontRightDrive = hardwareMap.get(DcMotor.class, "F_R");
         backLeftDrive = hardwareMap.get(DcMotor.class, "B_L");
@@ -25,7 +25,7 @@ public class BasicMechanum {
         headingPID = new PID(-0.02,0,0);
     }
 
-    public void openLoopMechanum(double x, double y, double yaw) {
+    public void openLoopMecanum(double x, double y, double yaw) {
         final double absPower = Math.hypot(x, y);
         final double driveAngle = Math.atan2(y, x) - Math.PI / 4;
         frontLeftDrive.setPower(1.4144 * absPower * Math.cos(driveAngle) - yaw);
@@ -34,10 +34,10 @@ public class BasicMechanum {
         backRightDrive.setPower(1.4144 * absPower * Math.cos(driveAngle) + yaw);
     }
 
-    public void closedLoopMechanum(double x, double y, double headingGoal) {
+    public void closedLoopMecanum(double x, double y, double headingGoal) {
         double headingState = imu.getYaw();
         double yawPower = headingPID.runPID(headingGoal, headingState);
-        openLoopMechanum(x, y, yawPower);
+        openLoopMecanum(x, y, yawPower);
     }
 
     // Getter and setter
@@ -53,14 +53,5 @@ public class BasicMechanum {
     public double getBackRightPower() {
         return backRightDrive.getPower();
     }
-    public double getFrontLeftPos() {
-        return frontLeftDrive.getCurrentPosition();
-    }
     public double getFrontRightPos() {return frontRightDrive.getCurrentPosition(); }
-    public double getBackLeftPos() {
-        return backLeftDrive.getCurrentPosition();
-    }
-    public double getBackRightPos() {
-        return backRightDrive.getCurrentPosition();
-    }
 }

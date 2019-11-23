@@ -11,7 +11,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class IMU {
     BNO055IMU imu;
     Orientation angles;
-    public double angleOfset;
+    public double angleOffset;
+    double deltaAngle = 0;
 
     public IMU(HardwareMap hardwareMap) {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -22,9 +23,9 @@ public class IMU {
 
     public double getYaw() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double deltaAngle = angles.firstAngle;
+        deltaAngle = angles.firstAngle;
 
-        deltaAngle -= angleOfset;
+        deltaAngle -= angleOffset;
 
         if (deltaAngle < -180)
             deltaAngle += 360;
@@ -36,7 +37,7 @@ public class IMU {
 
     public void zeroGyro() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        angleOfset = angles.firstAngle;
+        angleOffset = angles.firstAngle;
     }
     public double getPitch() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);

@@ -46,10 +46,10 @@ public class EndEffector {
 
     public void runExtension(double manualPower){
         if (Math.abs(manualPower) > .05) {
-            setEtensionPower(manualPower, false); // False to account for breakage of sensors
+            setExtensionPower(manualPower, false); // False to account for breakage of sensors
             return;
         }
-        setEtensionPower(0,false);
+        setExtensionPower(0,false);
     }
     public void runClamps() {
         if(clampState != prevClampState) {
@@ -92,7 +92,7 @@ public class EndEffector {
         rightClamp.setPower(rPower);
     }
 
-    private void setEtensionPower(double power, boolean considerLimmits) {
+    private void setExtensionPower(double power, boolean considerLimmits) {
         if ((!frontLimit && !rearLimit) || !considerLimmits) {
             extensionSerrvo.setPower(Range.clip(power, -1, 1));
         } else {
