@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -36,11 +35,7 @@ public class FirstAuto extends LinearOpMode {
         waitForStart();
         runtime.reset();
         while (opModeIsActive()) {
-//            vision.runVision();
-//            telemetry.addData("f", vision.xPos);
-//            telemetry.addData("f", vision.yPos);
-//            telemetry.addData("f", vision.zPos);
-//            telemetry.update();
+
             if (leg == 0) {
               moveGoal = -100;
               yPower = Range.clip(movePID.runPID(moveGoal, driveTrain.getFrontRightPos()),-.5,.5);
@@ -52,13 +47,13 @@ public class FirstAuto extends LinearOpMode {
                 visActive = true;
                 xPower = -.2;
                 yPower = -.1;
-                if (vision.isTargetVisible()) {
-                    xPower = vision.yPos * -.1;
-                    yPower = (vision.xPos - 4) * .1;
+                if (vision.getInView()) {
+                    xPower = vision.getyPos() * -.1;
+                    yPower = (vision.getxPos() - 4) * .1;
                     xPower = Range.clip(xPower, -.2,.2);
                     yPower = Range.clip(yPower, -.2,.2);
                 }
-                if (Math.abs(vision.getyPos()) < .1 && vision.isTargetVisible() && runtime.milliseconds() > 5000) {
+                if (Math.abs(vision.getyPos()) < .1 && vision.getInView() && runtime.milliseconds() > 5000) {
 
                     leg = 2;
                     xPower = 0;
@@ -69,7 +64,7 @@ public class FirstAuto extends LinearOpMode {
             } else if (leg == 2) {
                 elevator.setGoal(500);
             }
-            telemetry.addData("ypsd", vision.getyPos());
+
             telemetry.addData("A",driveTrain.frontRightDrive.getCurrentPosition());
             telemetry.addData("a", leg);
             telemetry.addData("B", yPower);

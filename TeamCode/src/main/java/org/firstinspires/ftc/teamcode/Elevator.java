@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,6 +11,7 @@ public class Elevator {
     private PID elevatorPID;
     private ElapsedTime runtime;
     private ElapsedTime runTime2;
+     ElapsedTime runTime3;
 
     // State 0 is reserved for IDLE
     // Intake states: 1 - 10
@@ -22,6 +22,11 @@ public class Elevator {
     private int idle = 0;
     private int zeroing = 11;
     private int moving = 12;
+    private int quickZero = 13;
+    private int delayedMove = 14;
+
+    private double stateDelayTime = 3000;
+    private int nextGoal = 0;
 
     private double errorFromEnds = 0;
 
@@ -31,7 +36,7 @@ public class Elevator {
     private int goal = 0 - zeroPos;
     private int blockHeight = -650;
     private int bumpHeight = 300;
-    private int maxHeight = -3100;
+    private int maxHeight = -3000;
 
     double velo = 0;
     boolean zeroed = false;
@@ -50,6 +55,7 @@ public class Elevator {
         elevatorPID = new PID(.003,0, .008);
         runtime = new ElapsedTime();
         runTime2 = new ElapsedTime();
+        runTime3 = new ElapsedTime();
     }
 
     public void runElevator(double manualPower) {
@@ -67,9 +73,12 @@ public class Elevator {
         if (prevState != state && state == zeroing) {
             runTime2.reset();
         }
+        if (state != delayedMove) {
+            runTime3.reset();
+        }
         if (state == moving && Math.abs(getPos() - goal) < 10) {
             state = idle;
-        } else if (state != zeroing && Math.abs(getPos() - goal) >= 10) {
+        } else if (state == idle && Math.abs(getPos() - goal) >= 10) {
             state = moving;
         }
         if (state == idle) {
@@ -85,6 +94,19 @@ public class Elevator {
             }
         } else if (state == moving) {
             setPower(elevatorPID.runPID(goal, elevatorMotor.getCurrentPosition()), false);
+        } else if (state == quickZero) {
+            goal = 0 - zeroPos;
+            setPower(elevatorPID.runPID(goal, elevatorMotor.getCurrentPosition()), false);
+            if (getPos() > -100) {
+                state = zeroing;
+            }
+        } else if (state == delayedMove) {
+            setPower(elevatorPID.runPID(goal, elevatorMotor.getCurrentPosition()), false);
+            if (runTime3.milliseconds() > stateDelayTime) {
+                state = moving;
+                goal = nextGoal;
+                release();
+            }
         }
         prevState = state;
     }
@@ -100,9 +122,13 @@ public class Elevator {
     public void runGoal() {
         this.goal = refGoal;
     }
-    public double getPower() {
-        return elevatorMotor.getPower();
+    public void delayedMove(int nextGoal, double waitTime) {
+        stateDelayTime = waitTime;
+        this.nextGoal = nextGoal;
+        state = delayedMove;
+        runTime3.reset();
     }
+
 
     private double calculateVelocity() {
         int pos = elevatorMotor.getCurrentPosition();
@@ -136,6 +162,12 @@ public class Elevator {
     }
     public int getGoal() {
         return goal;
+    }
+    public double getPower() {
+        return elevatorMotor.getPower();
+    }
+    public int getBumpHeight() {
+        return bumpHeight;
     }
     public void place() {
         if (refGoal2 == 1000) {
