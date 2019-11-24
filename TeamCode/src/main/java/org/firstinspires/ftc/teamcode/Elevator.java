@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
-
+// TODO: Comments. Lots of em.
 public class Elevator {
     DcMotor elevatorMotor;
     private PID elevatorPID;
@@ -39,7 +39,7 @@ public class Elevator {
     private int maxHeight = -3000;
 
     double velo = 0;
-    boolean zeroed = false;
+    private boolean zeroed = false;
     private double velocitySetpoint = 0;
     private int lastPos = 0;
     private double lastTime = 0;

@@ -23,11 +23,6 @@ public class Vision {
     private static final VuforiaLocalizer.CameraDirection cameraChoice = BACK;
     private static final boolean phonePORTRAIT = true  ;
 
-    // Phone orientation stuff (don't need to set to anything, done automatically later)
-    private float phoneXRotate    = 0;
-    private float phoneYRotate    = 0;
-    private float phoneZRotate    = 0;
-
     // Vuforia instances
     private VuforiaTrackable target;
     private OpenGLMatrix lastLocation = null;
@@ -57,17 +52,6 @@ public class Vision {
         target = stoneTarget;
         targetsSky = targetsSkyStone;
 
-        // We need to rotate the camera around it's long axis to bring the correct camera forward.
-        if (cameraChoice == BACK) {
-            phoneYRotate = -90;
-        } else {
-            phoneYRotate = 90;
-        }
-
-        // Rotate the phone vertical about the X axis if it's in portrait mode
-        if (phonePORTRAIT) {
-            phoneXRotate = 90 ;
-        }
         // Start looking for sky stones
         targetsSkyStone.activate();
     }

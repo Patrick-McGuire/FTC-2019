@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -66,13 +67,13 @@ public final class Teleop extends OpMode {
         double turnPower = Math.pow(gamepadTurn, 2) * (Math.abs(gamepadTurn) / (gamepadTurn + .0001));
 
         // Drive train code
-        if(runtime.milliseconds() < 300) {
+        if(runtime.milliseconds() < 300) {                                    // Reset heading goal to current heading for 300 milliseconds after the joystick is released
             headingGoal = imu.getYaw();
         }
-        if(Math.abs(imu.getYaw() - headingGoal) > 30) {                       // Keep track of the heading to hold for 300 milliseconds after the joystick is released
+        if(Math.abs(imu.getYaw() - headingGoal) > 45) {                       // If we are way of our desired heading, reset heading goal to current heading
             headingGoal = imu.getYaw();
         }
-        if(gamepad1.right_stick_x > .05 || gamepad1.right_stick_x < -.05) {   // If we are telling it to turn, turn at the specifyed power
+        if(gamepad1.right_stick_x > .05 || gamepad1.right_stick_x < -.05) {   // If we are telling it to turn, turn at the specified power
             driveTrain.openLoopMecanum(xPower, yPower, turnPower);
             runtime.reset();
         } else {                                                              // Else hold heading

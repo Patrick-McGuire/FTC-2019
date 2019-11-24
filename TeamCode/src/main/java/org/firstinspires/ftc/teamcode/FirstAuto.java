@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@Autonomous(name="Landing", group="Linear Opmode")
+@Autonomous(name="First Auto", group="Linear Opmode")
 public class FirstAuto extends LinearOpMode {
 
     // Declare OpMode members.
