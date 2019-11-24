@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class EndEffector {
-    private CRServo extensionSerrvo = null;
-    private CRServo leftClamp = null;
-    private CRServo rightClamp = null;
+public class Clamps {
+    private CRServo leftClamp;
+    private CRServo rightClamp ;
 
     private ElapsedTime runtime;
 
@@ -19,9 +17,6 @@ public class EndEffector {
     private int releaseTime = 300; // Milliseconds
 
     private double refTime = 0;
-
-    private boolean frontLimit = false;
-    private boolean rearLimit = false;
 
     // State 0 is reserved for IDLE
     // Intake states: 1 - 10
@@ -36,21 +31,13 @@ public class EndEffector {
     private int zeroingClamp = 33;
     private int releasingClamp = 34;
 
-    public EndEffector(HardwareMap hardwareMap) {
-        extensionSerrvo = hardwareMap.get(CRServo.class, "s1");
+    public Clamps(HardwareMap hardwareMap) {
         leftClamp = hardwareMap.get(CRServo.class, "s2");
         rightClamp = hardwareMap.get(CRServo.class, "s3");
         runtime = new ElapsedTime();
         clampState = zeroingClamp;
     }
 
-    public void runExtension(double manualPower){
-        if (Math.abs(manualPower) > .05) {
-            setExtensionPower(manualPower, false); // False to account for breakage of sensors
-            return;
-        }
-        setExtensionPower(0,false);
-    }
     public void runClamps() {
         if(clampState != prevClampState) {
             refTime = runtime.milliseconds();
@@ -92,16 +79,7 @@ public class EndEffector {
         rightClamp.setPower(rPower);
     }
 
-    private void setExtensionPower(double power, boolean considerLimmits) {
-        if ((!frontLimit && !rearLimit) || !considerLimmits) {
-            extensionSerrvo.setPower(Range.clip(power, -1, 1));
-        } else {
-            extensionSerrvo.setPower(0);
-        }
-    }
-
     // Getter and setter
-    // Clamp
     public void setClampState(int state) {
         this.clampState = state;
     }
@@ -113,18 +91,5 @@ public class EndEffector {
     }
     public double getClampStateTime() {
         return (runtime.milliseconds() - refTime); // Milliseconds
-    }
-    // Extension
-    public void setFrontLimit(boolean frontLimit) {
-        this.frontLimit = frontLimit;
-    }
-    public void setRearLimit(boolean rearLimit) {
-        this.rearLimit = rearLimit;
-    }
-    public boolean getFrontLimit() {
-        return frontLimit;
-    }
-    public boolean getRearLimit() {
-        return rearLimit;
     }
 }

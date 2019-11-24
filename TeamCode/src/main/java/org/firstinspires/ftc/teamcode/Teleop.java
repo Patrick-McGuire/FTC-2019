@@ -12,11 +12,12 @@ public final class Teleop extends OpMode {
     private BasicMecanum driveTrain;
     private Elevator elevator;
     private ElapsedTime runtime = new ElapsedTime();
-    private EndEffector endEffector;
+    private Clamps clamps;
+    private Extension extension;
 
     // Init vars
-    double headingGoal = 0;
-    boolean pressLastTime = false;
+    private double headingGoal = 0;
+    private boolean pressLastTime = false;
 
     // State 0 is reserved for IDLE
     // Intake states: 1 - 10
@@ -51,7 +52,8 @@ public final class Teleop extends OpMode {
         imu = new IMU(hardwareMap);
         elevator = new Elevator(hardwareMap);
         driveTrain = new BasicMecanum(imu, hardwareMap);
-        endEffector = new EndEffector(hardwareMap);
+        clamps = new Clamps(hardwareMap);
+        extension = new Extension((hardwareMap));
     }
 
     @Override
@@ -89,7 +91,7 @@ public final class Teleop extends OpMode {
 
         if (gp2x && !pressLastTime){                    // brings the elevator to zero, then zeros it
             elevator.setState(quickZero);
-            endEffector.setClampState(zeroingClamp);
+            clamps.setClampState(zeroingClamp);
             pressLastTime = true;
         } else if (gp2a && !pressLastTime){             // moves the elevator to one block lower than the last block height
             elevator.goalDownBlock();
@@ -115,7 +117,7 @@ public final class Teleop extends OpMode {
                 elevator.place();
             } else if (gamepad1.right_trigger >= .8){       // Release the clamps, and 3 seconds move the elevator back up
                 elevator.delayedMove(elevator.getGoal(), 3000);
-                endEffector.setClampState(releasingClamp);
+                clamps.setClampState(releasingClamp);
             }
         } else if (elevator.getState() != delayedState){    // Move the elevator back up
             elevator.release();
@@ -123,17 +125,17 @@ public final class Teleop extends OpMode {
 
         // Clamps
         if (gamepad1.right_bumper) {                        // Clamp on the block at 100% power
-            endEffector.setClampState(clamping);
+            clamps.setClampState(clamping);
         } else if(gamepad1.left_bumper) {
-            endEffector.setClampState(releasingClamp);      // Move the clamps out for small amount of time
+            clamps.setClampState(releasingClamp);      // Move the clamps out for small amount of time
         } else if (gamepad1.x) {
-            endEffector.setClampState(zeroingClamp);        // Move the clamps in for specified amount of time, the move them out (for another specified amount of time)
+            clamps.setClampState(zeroingClamp);        // Move the clamps in for specified amount of time, the move them out (for another specified amount of time)
         }
 
         // Run the horizontal extension
-        endEffector.runExtension(gamepad2.left_stick_y);
+        extension.runExtension(gamepad2.left_stick_y);
         // Run the clamps
-        endEffector.runClamps();
+        clamps.runClamps();
         // Run the elevator
         elevator.runElevator(gamepad2.right_stick_y);
 
@@ -141,9 +143,9 @@ public final class Teleop extends OpMode {
         telemetry.addData("Robot","State (%.2f), Heading (%.2f)",
                 (double) state, imu.getYaw());
         telemetry.addData("Elevator", "Velo (%.2f), Pos (%.2f), state (%.2f), goal (%.2f), power (%.2f)",
-                elevator.velo, (double) elevator.getPos(), (double) elevator.getState(), (double) elevator.getGoal(), elevator.getPower());
+                elevator.getVelocity(), (double) elevator.getPos(), (double) elevator.getState(), (double) elevator.getGoal(), elevator.getPower());
         telemetry.addData("Clamp","State (%.2f), Power (%.2f), State time (%.2f)",
-                (double) endEffector.getClampState(), endEffector.getClampPower(), endEffector.getClampStateTime());
+                (double) clamps.getClampState(), clamps.getClampPower(), clamps.getClampStateTime());
         telemetry.addData("Drive Train","F-Left (%.2f), F-Right (%.2f), B-Left (%.2f), Back Right (%.2f)",
                 driveTrain.getFrontLeftPower(), driveTrain.getFrontRightPower(), driveTrain.getBackLeftPower(), driveTrain.getBackRightPower());
     }

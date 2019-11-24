@@ -93,8 +93,10 @@ public class Vision {
         enableTracking();
     }
 
-    // Getter and setter
-    public double getxPos() { return xPos; }
+    // Getter methods
+    public double getxPos() {
+        return xPos;
+    }
     public double getyPos() {
         return yPos;
     }

@@ -13,7 +13,7 @@ public class FirstAuto extends LinearOpMode {
     private IMU imu;
     private BasicMecanum driveTrain;
     private Elevator elevator;
-    private EndEffector endEffector;
+    private Clamps clamps;
     private Vision vision;
     private boolean visActive = false;
     private PID movePID;
@@ -28,7 +28,7 @@ public class FirstAuto extends LinearOpMode {
         imu = new IMU(hardwareMap);
         elevator = new Elevator(hardwareMap);
         driveTrain = new BasicMecanum(imu, hardwareMap);
-        endEffector = new EndEffector(hardwareMap);
+        clamps = new Clamps(hardwareMap);
         vision = new Vision(hardwareMap);
         movePID = new PID(.15,0,0);
 
@@ -69,9 +69,9 @@ public class FirstAuto extends LinearOpMode {
             telemetry.addData("a", leg);
             telemetry.addData("B", yPower);
             telemetry.update();
-            //endEffector.runExtension();
+            //clamps.runExtension();
             driveTrain.closedLoopMecanum(xPower, yPower, headingGoal);
-            endEffector.runClamps();
+            clamps.runClamps();
             elevator.runElevator(0);
             if (visActive) {
                 vision.runVision();
