@@ -54,4 +54,8 @@ public class BasicMecanum {
         return backRightDrive.getPower();
     }
     public double getFrontRightPos() {return frontRightDrive.getCurrentPosition(); }
+    public void resetEncoder() {
+        frontRightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
 }

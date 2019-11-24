@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -53,6 +54,7 @@ public class Elevator {
     public Elevator(HardwareMap hardwareMap) {
         // Init the motor, and set it to track it's encoder
         elevatorMotor = hardwareMap.get(DcMotor.class, "ELE");
+        elevatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         elevatorMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         elevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
