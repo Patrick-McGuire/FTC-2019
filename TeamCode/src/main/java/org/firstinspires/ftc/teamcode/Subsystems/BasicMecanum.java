@@ -1,10 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class BasicMecanum {
+import org.firstinspires.ftc.teamcode.Utility.PID;
+
+
+public class BasicMecanum {         //MeCANum?  More like MeCAN'Tum
     DcMotor frontLeftDrive, frontRightDrive, backLeftDrive, backRightDrive;
     IMU imu;
     PID headingPID;
@@ -38,6 +41,13 @@ public class BasicMecanum {
         double headingState = imu.getYaw();
         double yawPower = headingPID.runPID(headingGoal, headingState);
         openLoopMecanum(x, y, yawPower);
+    }
+
+    public void turn(double power) {
+        frontLeftDrive.setPower(-power);
+        frontRightDrive.setPower(-power);
+        backLeftDrive.setPower(power);
+        backRightDrive.setPower(power);
     }
 
     // Getter and setter

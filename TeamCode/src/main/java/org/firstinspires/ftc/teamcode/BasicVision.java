@@ -1,11 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Subsystems.BasicMecanum;
+import org.firstinspires.ftc.teamcode.Subsystems.IMU;
+import org.firstinspires.ftc.teamcode.Subsystems.Vision;
+
 // This op-mode will drive until the robot is centered on a skystone, and a few inches away from it (300 native units)
 @Autonomous(name="Basic Vision Example", group="Linear Opmode")
+@Disabled
 public class BasicVision extends LinearOpMode {
 
     // Declare OpMode members.
@@ -34,7 +40,7 @@ public class BasicVision extends LinearOpMode {
         // Init subsystems
         imu = new IMU(hardwareMap);
         driveTrain = new BasicMecanum(imu, hardwareMap);
-        vision = new Vision(hardwareMap);;
+        vision = new Vision(hardwareMap);
 
         // Display on driver station
         telemetry.addData("Initialization", "Complete");

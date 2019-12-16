@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.Utility.PID;
 
 public class Elevator {
     // Declare class members.
@@ -20,18 +22,19 @@ public class Elevator {
     // Robot States: 21 - 30
     private int prevState = 0;
     private int state = 0;
-    private final int idle = 0;
-    private final int zeroing = 11;
-    private final int moving = 12;
-    private final int quickZero = 13;
-    private final int delayedMove = 14;
+    public final int idle = 0;
+    public final int zeroing = 11;
+    public final int moving = 12;
+    public final int quickZero = 13;
+    public final int delayedMove = 14;
 
     // Elevator specs
-    private final int maxHeight = -3000;
+    private final int maxHeight = -3110;
     private final int minHeight = 50;
     private final int bumpHeight = 300;
     private final int blockHeight = -650;
     private final int setpointTolerance = 10;
+    private final double kf = -.05;
 
     // Zeroing stuff
     private final double velocitySetpoint = 0;
@@ -43,7 +46,7 @@ public class Elevator {
 
     // Ele goal stuff
     private int goal = 0 - minHeight;
-    private int refGoal = -490 - minHeight;
+    private int refGoal = -550 - minHeight;
     private int refGoal2 = 1000;
     private int nextGoal = 0;
     private double stateDelayTime = 3000;
@@ -155,7 +158,7 @@ public class Elevator {
             errorFromEnds = Range.clip(errorFromEnds * .001, -1, 1);
             elevatorMotor.setPower(Math.max(Math.min(Math.abs(power), Math.abs(errorFromEnds)), .1) * Math.abs(power) / power);
         } else {
-            elevatorMotor.setPower(Range.clip(power, -1, 1));
+            elevatorMotor.setPower(Range.clip(power + kf, -1, 1));
         }
     }
 
