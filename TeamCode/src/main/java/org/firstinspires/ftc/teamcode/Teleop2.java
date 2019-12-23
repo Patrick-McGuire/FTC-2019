@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.Subsystems.ScaledMecanum;
 
 // Two controller teleop mode
 @TeleOp(name = "Teleop", group = "Opmode")
-@Disabled
 public final class Teleop2 extends OpMode {
     // Declare OpMode members.
     private IMU imu;
@@ -26,6 +25,7 @@ public final class Teleop2 extends OpMode {
         drivetrain = new ScaledMecanum(imu, hardwareMap, gamepad1, gamepad2);
         ele = hardwareMap.get(DcMotor.class, "ele");
         servo = hardwareMap.get(Servo.class, "s");
+        drivetrain.enableYeet();
     }
 
     @Override

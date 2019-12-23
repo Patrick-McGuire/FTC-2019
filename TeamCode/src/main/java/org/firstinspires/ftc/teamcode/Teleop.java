@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Subsystems.Clamps;
 import org.firstinspires.ftc.teamcode.Subsystems.Elevator;
@@ -12,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.ScaledMecanum;
 
 // Two controller teleop mode
 @TeleOp(name = "Teleop 2C", group = "Opmode")
+@Disabled
 public final class Teleop extends OpMode {
     // Declare OpMode members.
     private IMU imu;
@@ -21,9 +24,11 @@ public final class Teleop extends OpMode {
     private ScaledMecanum drivetrain;
     private DigitalChannel digitalTouch;
     private Servo armServo;
+    private ElapsedTime runtime;
 
     // Init vars
     private boolean pressLastTime = false;
+    private boolean goToCarry = false;
 
     @Override
     public final void init() {
@@ -38,6 +43,7 @@ public final class Teleop extends OpMode {
         digitalTouch = hardwareMap.get(DigitalChannel.class, "ls");
         armServo = hardwareMap.get(Servo.class, "s5");
         armServo.setPosition(.5);
+        runtime = new ElapsedTime();
     }
 
     @Override
@@ -79,15 +85,19 @@ public final class Teleop extends OpMode {
         if (gp2x && !pressLastTime){                    // brings the elevator to zero, then zeros it
             elevator.setState(elevator.quickZero);
             pressLastTime = true;
+            goToCarry = false;
         } else if (gp2a && !pressLastTime){             // moves the elevator to one block lower than the last block height
             elevator.goalDownBlock();
             pressLastTime = true;
+            goToCarry = false;
         } else if (gp2b && !pressLastTime) {            // moves the elevator to the last block height
             elevator.runGoal();
             pressLastTime = true;
+            goToCarry = false;
         } else if (gp2y && !pressLastTime) {            // moves the elevator to one block higher than the last block height
             elevator.goalUpBlock();
             pressLastTime = true;
+            goToCarry = false;
         } else if (gp2x || gp2a || gp2b || gp2y) {      // Keep track of whether the button was just pressed
             pressLastTime = true;
         } else {                                        // Keep track of whether the button was just pressed
@@ -118,9 +128,16 @@ public final class Teleop extends OpMode {
         if (gamepad1.right_bumper) {
             clamps.clamp();
             clamps.setState(clamps.runToPos);
+            if (elevator.getGoal() > -300) {
+                goToCarry = true;
+            }
         } else if(gamepad1.left_bumper) {
             clamps.preClamp();
             clamps.setState(clamps.runToPos);
+            if (elevator.getGoal() == -250) {
+                elevator.setGoal(-50);
+            }
+            goToCarry = false;
         } else if (gamepad1.x) {
             clamps.open();
             clamps.setState(clamps.runToPos);
@@ -128,6 +145,13 @@ public final class Teleop extends OpMode {
             clamps.close();
             clamps.setState(clamps.runToPos);
         }
+        if (goToCarry && runtime.milliseconds() > 500) {
+            elevator.setGoal(-250);
+            goToCarry = false;
+        } else if (!goToCarry){
+            runtime.reset();
+        }
+
 
         // Run the horizontal extension
         extension.runExtension(gamepad2.left_stick_y);

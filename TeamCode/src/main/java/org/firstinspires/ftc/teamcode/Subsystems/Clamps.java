@@ -23,7 +23,7 @@ public class Clamps {
     private final double preClampPos = .43;
     private final double hookPos = .67;
     private final double capPos = .5;
-    private final double clampPos = .72;
+    private final double clampPos = .84;
     private double positionGoal = preClampPos;
 
     // State 0 is reserved for IDLE
