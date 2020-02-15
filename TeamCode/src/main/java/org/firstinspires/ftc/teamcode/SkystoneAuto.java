@@ -64,7 +64,7 @@ public class SkystoneAuto extends LinearOpMode {
     private final int angleTolerance = 10;              // The angle tolerance when turning
 
     private final int strafeTime = 1000;                // The amount of time the robot strafe for when looking for a block, before waiting
-    private final int waitTime = 500;                   // The amount of time the robot waits for when looking for a block
+    private final int waitTime = 1000;                   // The amount of time the robot waits for when looking for a block
 
     private final double maxTrackingPower = .2;         // The maximum power the robot will drive at when centering on a block
     private final int zTolerance = 60;                  // The tolerance the robot can be from the block in the z (native to vision)/ y  (native to robot) direction

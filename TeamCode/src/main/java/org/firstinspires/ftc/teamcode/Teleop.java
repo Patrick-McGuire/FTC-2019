@@ -9,12 +9,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Subsystems.Clamps;
 import org.firstinspires.ftc.teamcode.Subsystems.Elevator;
 import org.firstinspires.ftc.teamcode.Subsystems.Extension;
+import org.firstinspires.ftc.teamcode.Subsystems.FoundationPuller;
 import org.firstinspires.ftc.teamcode.Subsystems.IMU;
 import org.firstinspires.ftc.teamcode.Subsystems.ScaledMecanum;
 
 // Two controller teleop mode
 @TeleOp(name = "Teleop 2C", group = "Opmode")
-@Disabled
 public final class Teleop extends OpMode {
     // Declare OpMode members.
     private IMU imu;
@@ -25,6 +25,7 @@ public final class Teleop extends OpMode {
     private DigitalChannel digitalTouch;
     private Servo armServo;
     private ElapsedTime runtime;
+    private FoundationPuller foundationPuller;
 
     // Init vars
     private boolean pressLastTime = false;
@@ -40,6 +41,7 @@ public final class Teleop extends OpMode {
         drivetrain = new ScaledMecanum(imu, hardwareMap, gamepad1, gamepad2);
         clamps.closeArm();
         clamps.setState(clamps.runToPos);
+        foundationPuller = new FoundationPuller(hardwareMap);
         digitalTouch = hardwareMap.get(DigitalChannel.class, "ls");
         armServo = hardwareMap.get(Servo.class, "s5");
         armServo.setPosition(.5);
@@ -48,16 +50,27 @@ public final class Teleop extends OpMode {
 
     @Override
     public final void loop() {
+        if (gamepad1.dpad_left) {
+            foundationPuller.clampPuller();
+        } else if (gamepad1.dpad_up) {
+            foundationPuller.openPuller();
+        } else if (gamepad1.x) {
+            foundationPuller.prePuller();
+        } else if (gamepad1.start) {
+            foundationPuller.doHankTank();
+        }
+
         if (gamepad1.b) {
             armServo.setPosition(0);
         } else if (gamepad1.y) {
             armServo.setPosition(.5);
             clamps.capPlace();
         }
-        if (gamepad1.dpad_right) {
+        if (gamepad2.dpad_right) {
             clamps.openArm();
         }
-        if (gamepad1.dpad_left) {
+        if (gamepad2
+                .dpad_left) {
             clamps.closeArm();
         }
 
@@ -138,7 +151,7 @@ public final class Teleop extends OpMode {
                 elevator.setGoal(-50);
             }
             goToCarry = false;
-        } else if (gamepad1.x) {
+        } else if (gamepad1.dpad_right) {
             clamps.open();
             clamps.setState(clamps.runToPos);
         } else if (gamepad1.left_trigger > 0) {
