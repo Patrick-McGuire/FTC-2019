@@ -34,7 +34,7 @@ public class PullyThingAuto extends LinearOpMode {
 
 
     // General
-    private int leg = 096;
+    private int leg = 0;
     private int directionSign = -1;
 
 
